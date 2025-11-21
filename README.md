@@ -1,53 +1,176 @@
 # CHIP_Analysis
 
-This represents an open source pythonic solutions to the analysis of qPCR data during Chromatin Immunoprecipitation Assays
-This generates publication quality images of ip/input inclusive of error bars (Via Standard deviation)
+An open source Python solution for analyzing qPCR data from Chromatin Immunoprecipitation (ChIP) assays. This tool generates publication-quality graphs of IP/Input ratios with error bars (via standard deviation).
 
-There are 2 main modules within main.py:
-1) ChIP Analyser which initially analyses Cq Data
-2) ChIP Plotter which plots the data, with an option for comparing 2 or 4 samples at the same time
+## Features
+
+- **ChIP Analyser**: Processes raw Cq data, calculates dilution factors, and computes IP/Input percentages
+- **ChIP Plotter**: Visualizes processed data, comparing 2 or 4 samples simultaneously
+- **Cross-platform**: Works on any Windows machine
+- **User-friendly**: Interactive command-line interface with helpful prompts
+- **Robust**: Includes input validation, error handling, and helpful warnings
 
 ### Example Graph Output
 ![image](https://user-images.githubusercontent.com/64132598/166897170-c988d92f-54fd-4cb1-b813-f9bebfca4490.png)
 
-## Usage 
+## Installation
 
-### Set up
+### Prerequisites
 
-Create a result input file and plotting input file in the csv format. Define the path as instructed within main.py
+- Python 3.7 or higher
+- pip (Python package installer)
 
-### Conducting the Analysis 
+### Setup Instructions
 
-Take note to run only 1 input at a time (A beads or G beads)
-There needs to be a space between the sample and target (ie ev SIRT1), and no other spaces. This is not capital sensitive 
-Copy and paste your results from the BioRad Machine onto your input file
-Take the results from the output and paste into your plotting input file 
-Repeat until all inputs and IP are analysed 
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/VouchfulBiology/CHIP_Analysis.git
+   cd CHIP_Analysis
+   ```
 
-### Plotting the CHIP Results
+2. **Install required dependencies**
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-Ensure that all results to be plotted is in your plotting input file 
-Answer the questions as needed
-Save as the image that is output
-Repeat the cells after the file upload to produce other combinations of images
+   This will install:
+   - pandas (for data manipulation)
+   - numpy (for numerical computing)
+   - matplotlib (for plotting)
 
-## Input formatting 
+3. **Verify installation**
+   ```bash
+   python main.py
+   ```
 
-The program is optimised for the Cq results file from a Biorad machine but should be able to accept other machines with minor adjustments to column names 
-An example data has been provided for input to the Analyser module as well as example plotting inputs for the plotting module 
-Take note that the example data is not real and are not results of actual scientific experiments.
+## Usage
 
-Target Name should include the primer name 
-Sample Name should include the sample name and the target gene, with a space seperating them
+### Running the Program
+
+Run the program using Python:
+```bash
+python main.py
+```
+
+You'll be presented with a menu to choose between:
+- **Analyser (a)**: Process raw ChIP data
+- **Plotter (b)**: Visualize processed data
+
+### ChIP Analyser Module
+
+The analyser processes raw Cq values from your qPCR machine.
+
+**Steps:**
+1. Run the program and select option 'a'
+2. Enter dilution parameters when prompted (or use defaults)
+3. Provide the path to your CSV file containing Cq results
+4. Enter target genes and sample names when prompted
+5. Specify output directory (or use default: `~/Desktop/CHIP_Output`)
+
+**Important Notes:**
+- Process only 1 input type at a time (e.g., A beads OR G beads, not both)
+- The program will warn you if Cq differences between replicates exceed 1.0
+- Output files are automatically saved with descriptive names
+
+### ChIP Plotter Module
+
+The plotter visualizes your processed ChIP data.
+
+**Steps:**
+1. Run the program and select option 'b'
+2. Choose number of samples to compare (2 or 4)
+3. Provide the path to your plotting input CSV file
+4. Enter samples to compare (comma-separated)
+5. Enter target gene to analyze
+6. View the generated plot
+
+**Important Notes:**
+- If you have multiple input types, aggregate all data into a single CSV before plotting
+- You can generate multiple plots in one session (the program will ask if you want another graph)
+- Sample names and targets are not case-sensitive
+
+## Input File Formatting
+
+### For Analyser Module
+
+The program is optimized for Cq results files from BioRad machines but can accept other formats with the following required columns:
+
+- **Cq**: The Cq values from qPCR
+- **Target**: The primer name
+- **Sample**: The sample name and target gene (with a space separating them)
+
+**Example:**
+```csv
+Cq,Target,Sample
+25.3,GAPDH,ev SIRT1
+25.5,GAPDH,ev SIRT1
+28.1,GAPDH,ev SIRT1
+```
+
+**Naming Convention:**
+- Sample names should have format: `[sample] [target]` (e.g., "ev SIRT1")
+- Use a space to separate sample and target
+- Names are not case-sensitive
+- Example data files are provided: `Example_Data.csv` and `Example_Plotting.csv`
+
+**Note:** The example data is for demonstration purposes only and does not represent actual scientific experiments.
+
+### For Plotter Module
+
+The plotter requires CSV files with the following columns (generated by the Analyser):
+
+- **sample**: Sample identifier
+- **target**: Target gene identifier
+- **primer**: Primer identifier
+- **IP/IN (%)**: Calculated IP/Input percentage
+- **lower_bound**: Lower error bound
+- **upper_bound**: Upper error bound
+
+## Code Quality
+
+This project follows Python best practices:
+
+- **Type hints**: All functions include type annotations for better code clarity
+- **Docstrings**: Comprehensive documentation for all functions
+- **Error handling**: Robust exception handling with helpful error messages
+- **Input validation**: Validates file existence, required columns, and user inputs
+- **Consistent naming**: Follows PEP 8 snake_case naming conventions
+- **Modular design**: Code organized into small, reusable functions
+- **Constants**: Magic numbers extracted to named constants for maintainability
+
+## Troubleshooting
+
+### Common Issues
+
+**"CSV file not found"**
+- Ensure the file path is correct
+- Use absolute paths (e.g., `C:\Users\YourName\Desktop\data.csv`)
+- Check that the file extension is `.csv`
+
+**"Missing required columns"**
+- Verify your CSV has columns named: `Cq`, `Target`, `Sample`
+- Column names are case-sensitive
+
+**"No matching input found"**
+- Ensure your input samples are labeled with "input" in the sample name
+- Check that sample and primer names match between IP and Input samples
 
 ## Contributing
-Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions you make are greatly appreciated.
 
-Fork the Project
-Create your Feature Branch (git checkout -b feature/AmazingFeature) 
+Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are greatly appreciated.
 
-Commit your Changes (git commit -m 'Add some AmazingFeature') 
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-Push to the Branch (git push origin feature/AmazingFeature)
+## License
 
-Open a Pull Request
+This project is licensed under the Apache License 2.0 - see the LICENSE file for details.
+
+## Acknowledgments
+
+- Optimized for BioRad qPCR machines
+- Suitable for chromatin immunoprecipitation (ChIP) data analysis
+- Generates publication-quality visualizations
